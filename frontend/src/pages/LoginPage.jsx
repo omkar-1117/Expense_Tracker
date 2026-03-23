@@ -19,8 +19,13 @@ export default function LoginPage() {
       const res = await login({ username, password });
       setToken(res.data.access);
       navigate("/");
-    } catch {
-      setError("Invalid username or password");
+    } catch (err) {
+      const message =
+        err.response?.data?.detail ||
+        err.response?.data?.error ||
+        (err.response ? `Server error ${err.response.status}` : "Network error");
+      setError(message);
+      console.error("Login failure", err.response || err);
     } finally {
       setLoading(false);
     }
